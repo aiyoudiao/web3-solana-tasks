@@ -3,15 +3,25 @@
   "version": "1.0.0",
   "description": "铸造 SPL 代币",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "g": "tsx scripts/update-env.ts",
+    "mint": "tsx mint-spl-token.ts",
+    "temp-mint": "NODE_EXTRA_CA_CERTS='' NODE_TLS_REJECT_UNAUTHORIZED=0 tsx mint-spl-token.ts"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "type": "commonjs",
+  "license": "MIT",
   "dependencies": {
     "@solana/spl-token": "^0.4.14",
-    "@solana/web3.js": "^1.98.4"
+    "@solana/web3.js": "^1.98.4",
+    "bs58": "^6.0.0",
+    "dotenv": "^17.2.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.9",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
   }
 }

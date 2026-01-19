@@ -24,41 +24,57 @@ import {
 import {
   createAssociatedTokenAccountInstruction,
   createInitializeMint2Instruction,
-  createMintToInstruction,
   createMintToCheckedInstruction,
   MINT_SIZE,
   getMinimumBalanceForRentExemptMint,
   TOKEN_PROGRAM_ID,
   getAssociatedTokenAddressSync,
-
-  ASSOCIATED_TOKEN_PROGRAM_ID
 } from "@solana/spl-token";
 
+import "dotenv/config";
+
 import bs58 from "bs58";
+import fs from "fs";
+import path from "path";
+import os from "os";
+
+function getCurrentHomeSecret(): string {
+  const keypairPath = path.join(os.homedir(), ".config", "solana", "id.json");
+  if (!fs.existsSync(keypairPath)) {
+    console.error(
+      `\n❌ 错误: 未在默认路径找到 Solana 密钥文件: ${keypairPath}`
+    );
+    console.error("💡 提示: ");
+    console.error(
+      "  1. 请先安装 Solana CLI 并运行 `solana-keygen new` 生成密钥。"
+    );
+    console.error("  2. 或者在 .env 文件中配置 SECRET 环境变量。\n");
+    throw new Error("Solana keypair not found");
+  }
+  const secretKey = Uint8Array.from(
+    JSON.parse(fs.readFileSync(keypairPath, "utf-8"))
+  );
+  return bs58.encode(secretKey);
+}
 
 // Import our keypair from the wallet file
 const feePayer = Keypair.fromSecretKey(
   // ⚠️ INSECURE KEY. DO NOT USE OUTSIDE OF THIS CHALLENGE
-  bs58.decode(process.env.SECRET)
+  bs58.decode(process.env.SECRET || getCurrentHomeSecret())
 );
 
 //Create a connection to the RPC endpoint
-const connection = new Connection(
-  process.env.RPC_ENDPOINT,
-  "confirmed"
-);
+const connection = new Connection(process.env.RPC_ENDPOINT, "confirmed");
 
 // Entry point of your TypeScript code (we will call this)
 async function main() {
   try {
-
     // Generate a new keypair for the mint account
     const mint = Keypair.generate();
 
     const mintRent = await getMinimumBalanceForRentExemptMint(connection);
 
     // START HERE
-
 
     // 创建 mint 账户的指令：由 feePayer 支付租金，在 TOKEN_PROGRAM_ID 名下创建 mint 账户
     const createAccountIx = SystemProgram.createAccount({
@@ -107,24 +123,23 @@ async function main() {
       6 // 小数位数，供合约做校验
     );
 
-
     const recentBlockhash = await connection.getLatestBlockhash();
 
     const transaction = new Transaction({
       feePayer: feePayer.publicKey,
       blockhash: recentBlockhash.blockhash,
-      lastValidBlockHeight: recentBlockhash.lastValidBlockHeight
+      lastValidBlockHeight: recentBlockhash.lastValidBlockHeight,
     }).add(
-        createAccountIx,
-        initializeMintIx,
-        createAssociatedTokenAccountIx,
-        mintToCheckedIx
+      createAccountIx,
+      initializeMintIx,
+      createAssociatedTokenAccountIx,
+      mintToCheckedIx
     );
 
     const transactionSignature = await sendAndConfirmTransaction(
       connection,
       transaction,
-      [feePayer, mint]  // This is the list of signers. Who should be signing this transaction?
+      [feePayer, mint] // This is the list of signers. Who should be signing this transaction?
     );
 
     console.log("Mint Address:", mint.publicKey.toBase58());
@@ -133,3 +148,5 @@ async function main() {
     console.error(`Oops, something went wrong: ${error}`);
   }
 }
+
+await main();
