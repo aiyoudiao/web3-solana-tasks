@@ -3,7 +3,7 @@ import { Program } from "@coral-xyz/anchor";
 import { BlueshiftAnchorVault } from "../target/types/blueshift_anchor_vault";
 import { assert } from "chai";
 
-describe("blueshift_anchor_vault", () => {
+describe("blueshift_anchor_vault (锚定金库)", () => {
   // 配置客户端使用本地集群
   const provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
@@ -18,7 +18,7 @@ describe("blueshift_anchor_vault", () => {
     program.programId,
   );
 
-  it("Deposits SOL into the vault", async () => {
+  it("存入 SOL 到金库", async () => {
     // 存入 1 SOL (1_000_000_000 lamports)
     const amount = new anchor.BN(1_000_000_000);
 
@@ -29,7 +29,7 @@ describe("blueshift_anchor_vault", () => {
 
     console.log(`\n当前余额: ${preSignerBalance} SOL`);
 
-    console.log("Depositing 1 SOL...");
+    console.log("正在存入 1 SOL...");
 
     try {
       const tx = await program.methods
@@ -41,20 +41,20 @@ describe("blueshift_anchor_vault", () => {
         })
         .rpc();
 
-      console.log("Deposit Transaction signature", tx);
+      console.log("存款交易签名", tx);
 
       // 验证金库余额
       const vaultBalance = await provider.connection.getBalance(vaultPda);
-      console.log("Vault Balance:", vaultBalance);
-      assert.equal(vaultBalance, amount.toNumber(), "Vault should have 1 SOL");
+      console.log("金库余额:", vaultBalance);
+      assert.equal(vaultBalance, amount.toNumber(), "金库应该有 1 SOL");
     } catch (e) {
       console.error(e);
       throw e;
     }
   });
 
-  it("Withdraws SOL from the vault", async () => {
-    console.log("Withdrawing all SOL...");
+  it("从金库取出 SOL", async () => {
+    console.log("正在取出所有 SOL...");
 
     try {
       const tx = await program.methods
@@ -66,12 +66,12 @@ describe("blueshift_anchor_vault", () => {
         })
         .rpc();
 
-      console.log("Withdraw Transaction signature", tx);
+      console.log("取款交易签名", tx);
 
       // 验证金库余额应为 0
       const vaultBalance = await provider.connection.getBalance(vaultPda);
-      console.log("Vault Balance after withdraw:", vaultBalance);
-      assert.equal(vaultBalance, 0, "Vault should be empty");
+      console.log("取款后金库余额:", vaultBalance);
+      assert.equal(vaultBalance, 0, "金库应该为空");
     } catch (e) {
       console.error(e);
       throw e;

@@ -15,6 +15,7 @@ pub mod blueshift_anchor_vault {
     /// - ctx: 包含了执行该指令所需的账户上下文 (VaultAction)。
     /// - amount: 要存入的 lamports 数量 (u64 类型)。
     pub fn deposit(ctx: Context<VaultAction>, amount: u64) -> Result<()> {
+        msg!("开始执行存款操作...");
         // 1. 检查金库是否为空。
         // 为了防止重复初始化或状态覆盖，我们要求金库当前的余额（lamports）必须为 0。
         // 如果不为 0，则抛出 VaultAlreadyExists 错误。
@@ -43,6 +44,7 @@ pub mod blueshift_anchor_vault {
 
         // 调用 anchor_lang 提供的 system_program::transfer 辅助函数执行转账
         transfer(cpi_context, amount)?;
+        msg!("存款成功：已存入 {} lamports", amount);
 
         Ok(())
     }
@@ -52,6 +54,7 @@ pub mod blueshift_anchor_vault {
     /// 参数:
     /// - ctx: 包含了执行该指令所需的账户上下文 (VaultAction)。
     pub fn withdraw(ctx: Context<VaultAction>) -> Result<()> {
+        msg!("开始执行取款操作...");
         // 1. 检查金库是否为空。
         // 如果金库里没有钱，就无法取款，抛出 InvalidAmount 错误。
         // require_neq! 宏确保两个值不相等。
@@ -90,6 +93,7 @@ pub mod blueshift_anchor_vault {
 
         // 执行转账
         transfer(cpi_context, amount)?;
+        msg!("取款成功：已取出 {} lamports", amount);
 
         Ok(())
     }
@@ -127,9 +131,9 @@ pub struct VaultAction<'info> {
 /// 错误代码枚举：定义程序可能抛出的自定义错误。
 #[error_code]
 pub enum VaultError {
-    #[msg("Vault already exists")] // 错误消息：金库已存在（不为空）
+    #[msg("金库已存在（不为空）")] 
     VaultAlreadyExists,
     
-    #[msg("Invalid amount")] // 错误消息：金额无效（小于免租金限额或为0）
+    #[msg("金额无效（小于免租金限额或为0）")] 
     InvalidAmount,
 }

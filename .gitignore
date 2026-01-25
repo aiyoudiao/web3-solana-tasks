@@ -23,11 +23,11 @@ target
 **/node_modules/**
 /test-ledger/
 
-tasks/blueshift_anchor_vault/.anchor
-tasks/blueshift_anchor_vault/.DS_Store
-tasks/blueshift_anchor_vault/target
+tasks/**/.anchor
+tasks/**/.DS_Store
+tasks/**/target
 .rs.bk
-tasks/blueshift_anchor_vault/node_modules
-tasks/blueshift_anchor_vault/test-ledger
-tasks/blueshift_anchor_vault/.yarn
-tasks/blueshift_anchor_vault/pnpm-lock.yaml
+tasks/**/node_modules
+tasks/**/test-ledger
+tasks/**/.yarn
+tasks/**/pnpm-lock.yaml
