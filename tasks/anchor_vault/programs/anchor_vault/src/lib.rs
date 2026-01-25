@@ -6,7 +6,7 @@ use anchor_lang::system_program::{transfer, Transfer};
 declare_id!("22222222222222222222222222222222222222222222");
 
 #[program]
-pub mod blueshift_anchor_vault {
+pub mod anchor_vault {
     use super::*;
 
     /// 存款指令：将 lamports 从签名者账户转移到金库（Vault）账户。

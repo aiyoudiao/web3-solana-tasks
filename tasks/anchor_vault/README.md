@@ -6,7 +6,7 @@
 
 ## 📁 目录结构
 
-- `programs/blueshift_anchor_vault/src/lib.rs`: **核心代码文件**。包含了存款（Deposit）和取款（Withdraw）的逻辑。代码中已添加详细的逐行中文注释。
+- `programs/anchor_vault/src/lib.rs`: **核心代码文件**。包含了存款（Deposit）和取款（Withdraw）的逻辑。代码中已添加详细的逐行中文注释。
 - `Anchor.toml`: Anchor 的配置文件，已配置好作业要求的 Program ID。
 
 ## 🎯 核心功能

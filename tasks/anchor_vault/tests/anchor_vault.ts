@@ -1,15 +1,15 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
-import { BlueshiftAnchorVault } from "../target/types/blueshift_anchor_vault";
+import { AnchorVault } from "../target/types/anchor_vault";
 import { assert } from "chai";
 
-describe("blueshift_anchor_vault (锚定金库)", () => {
+describe("anchor_vault (锚定金库)", () => {
   // 配置客户端使用本地集群
   const provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
 
   const program = anchor.workspace
-    .BlueshiftAnchorVault as Program<BlueshiftAnchorVault>;
+    .AnchorVault as Program<AnchorVault>;
   const signer = provider.wallet as anchor.Wallet;
 
   // 派生金库 PDA
